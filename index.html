@@ -26,12 +26,16 @@
             let range_y = maximum_room_row - minimum_room_row + 1;
             let range_x = maximum_room_column - minimum_room_column + 1;
 
-            let random_room_row = Math.floor(Math.random() * range_y) + minimum_room_row;
-            let random_room_column = Math.floor(Math.random() * range_x) + minimum_room_column;
+            let center_room_row = Math.floor(Math.random() * range_y) + minimum_room_row;
+            let center_room_column = Math.floor(Math.random() * range_x) + minimum_room_column;
 
+            let top_room_row = center_room_row - Math.floor(room_height / 2);
+            let bottom_room_row = center_room_row + Math.floor(room_height / 2);
+            let left_room_column = center_room_column - Math.floor(room_width / 2);
+            let right_room_column = center_room_column + Math.floor(room_width / 2);
             
-            console.log("Random room row:", random_room_row);
-            console.log("Random room column:", random_room_column);
+            console.log("Center room row:", center_room_row);
+            console.log("Center room column:", center_room_column);
             
             let dungeon = [];
             //outer loop
@@ -42,7 +46,15 @@
                     row.push("#");
                 }
                 dungeon.push(row);
-            }        
+            }   
+            // Excavation
+            //outer loop
+            for (let row = top_room_row; row <= bottom_room_row; row++) {
+                //inner loop
+                for (let column = left_room_column; column <= right_room_column; column++) {
+                    dungeon[row][column] = ".";
+                }
+            }     
             // Display
             for (let row = 0; row < dungeon.length; row++) {
                 //console.log(dungeon[row].join(""));
