@@ -8,12 +8,24 @@
     <body>
         <pre id="dungeon"></pre>
         <script>
-            // Construct
-            let map_height = 30;
+            // starting dimensions
+            let map_height = 60;
             let map_width = 100;
 
-            let height = 10;
-            let width = 60;
+            let room_height = 5;
+            let room_width = 11;
+
+            let frame = 5; // map gen padding
+            let minimum_room_row = frame + Math.floor(room_height / 2);
+            let maximum_room_row = map_height - 1 - frame - Math.floor(room_height / 2);
+
+            let minimum_room_column = frame + Math.floor(room_width / 2);
+            let maximum_room_column = map_width - 1 - frame - Math.floor(room_width / 2);
+            
+            let range_y = maximum_room_row - minimum_room_row + 1;
+            let range_x = maximum_room_column - minimum_room_column + 1;
+            let random_room_pos = Math.floor(Math.random() 
+            * range) + minimum;
 
             let dungeon = [];
             //outer loop
@@ -25,13 +37,11 @@
                 }
                 dungeon.push(row);
             }        
-
             // Display
             for (let row = 0; row < dungeon.length; row++) {
                 //console.log(dungeon[row].join(""));
                 document.getElementById("dungeon").textContent += dungeon[row].join("") + "\n";
             }
-     
         </script>
     </body>
 </html>
