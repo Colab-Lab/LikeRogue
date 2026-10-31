@@ -4,6 +4,7 @@
         <title>
             ASCII Dungeon Generator
         </title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <pre id="dungeon"></pre>
@@ -24,15 +25,20 @@
             
             let range_y = maximum_room_row - minimum_room_row + 1;
             let range_x = maximum_room_column - minimum_room_column + 1;
-            let random_room_pos = Math.floor(Math.random() 
-            * range) + minimum;
 
+            let random_room_row = Math.floor(Math.random() * range_y) + minimum_room_row;
+            let random_room_column = Math.floor(Math.random() * range_x) + minimum_room_column;
+
+            
+            console.log("Random room row:", random_room_row);
+            console.log("Random room column:", random_room_column);
+            
             let dungeon = [];
             //outer loop
-            for (let h_index = 0; h_index < height; h_index++) {
+            for (let h_index = 0; h_index < map_height; h_index++) {
                 let row = [];
                 //inner loop
-                for (let w_index = 0; w_index < width; w_index++) {
+                for (let w_index = 0; w_index < map_width; w_index++) {
                     row.push("#");
                 }
                 dungeon.push(row);
@@ -42,6 +48,7 @@
                 //console.log(dungeon[row].join(""));
                 document.getElementById("dungeon").textContent += dungeon[row].join("") + "\n";
             }
+            console.log("Dungeon dimensions:", dungeon.length, dungeon[0].length);
         </script>
     </body>
 </html>
