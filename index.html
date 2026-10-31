@@ -13,30 +13,43 @@
             let map_height = 60;
             let map_width = 100;
 
-            let room_height = 5;
-            let room_width = 11;
+            function generate_room() {
+                let room_height = 5;
+                let room_width = 11;
 
-            let frame = 5; // map gen padding
-            let minimum_room_row = frame + Math.floor(room_height / 2);
-            let maximum_room_row = map_height - 1 - frame - Math.floor(room_height / 2);
+                let frame = 5; // map gen padding
+                let minimum_room_row = frame + Math.floor(room_height / 2);
+                let maximum_room_row = map_height - 1 - frame - Math.floor(room_height / 2);
 
-            let minimum_room_column = frame + Math.floor(room_width / 2);
-            let maximum_room_column = map_width - 1 - frame - Math.floor(room_width / 2);
+                let minimum_room_column = frame + Math.floor(room_width / 2);
+                let maximum_room_column = map_width - 1 - frame - Math.floor(room_width / 2);
+                
+                let range_y = maximum_room_row - minimum_room_row + 1;
+                let range_x = maximum_room_column - minimum_room_column + 1;
+
+                let center_room_row = Math.floor(Math.random() * range_y) + minimum_room_row;
+                let center_room_column = Math.floor(Math.random() * range_x) + minimum_room_column;
+
+                console.log("Center room row:", center_room_row);
+                console.log("Center room column:", center_room_column);
+
+                let top_room_row = center_room_row - Math.floor(room_height / 2);
+                let bottom_room_row = center_room_row + Math.floor(room_height / 2);
+                let left_room_column = center_room_column - Math.floor(room_width / 2);
+                let right_room_column = center_room_column + Math.floor(room_width / 2);
+                // Excavation
+                //outer loop
+                for (let row = top_room_row; row <= bottom_room_row; row++) {
+                    //inner loop
+                    for (let column = left_room_column; column <= right_room_column; column++) {
+                        dungeon[row][column] = ".";
+                    }
+                }  
+            }
             
-            let range_y = maximum_room_row - minimum_room_row + 1;
-            let range_x = maximum_room_column - minimum_room_column + 1;
 
-            let center_room_row = Math.floor(Math.random() * range_y) + minimum_room_row;
-            let center_room_column = Math.floor(Math.random() * range_x) + minimum_room_column;
-
-            let top_room_row = center_room_row - Math.floor(room_height / 2);
-            let bottom_room_row = center_room_row + Math.floor(room_height / 2);
-            let left_room_column = center_room_column - Math.floor(room_width / 2);
-            let right_room_column = center_room_column + Math.floor(room_width / 2);
             
-            console.log("Center room row:", center_room_row);
-            console.log("Center room column:", center_room_column);
-            
+            // initialize map
             let dungeon = [];
             //outer loop
             for (let h_index = 0; h_index < map_height; h_index++) {
@@ -47,14 +60,11 @@
                 }
                 dungeon.push(row);
             }   
-            // Excavation
-            //outer loop
-            for (let row = top_room_row; row <= bottom_room_row; row++) {
-                //inner loop
-                for (let column = left_room_column; column <= right_room_column; column++) {
-                    dungeon[row][column] = ".";
-                }
-            }     
+            generate_room();
+            generate_room();
+            generate_room();
+            generate_room();
+   
             // Display
             for (let row = 0; row < dungeon.length; row++) {
                 //console.log(dungeon[row].join(""));
