@@ -21,14 +21,7 @@
                 let row = [];
                 //inner loop
                 for (let w_index = 0; w_index < width; w_index++) {
-                    if (h_index === 0 || 
-                    h_index === map_height - 1 || 
-                    w_index === 0 || 
-                    w_index === map_width - 1) {
-                        row.push("#");
-                    } else {
-                     row.push(".");
-                    }
+                    row.push("#");
                 }
                 dungeon.push(row);
             }        
