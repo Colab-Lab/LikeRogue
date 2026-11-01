@@ -90,6 +90,19 @@
                     generate_corridor(compare_room_centers[index - 1],
                     compare_room_centers[index]);
                 }
+                
+                let floor_coordinates = []
+
+                for (let row = 0; row < dungeon.length; row++) {
+                    for (let column = 0; column < dungeon[row].length; column++) {
+                        if (dungeon[row][column] === ".") {
+                            floor_coordinates.push([row, column]);
+                        }
+                    }
+                }
+                for (let index = 0; index < floor_coordinates.length; index++) {
+                    console.log(floor_coordinates[index][0], floor_coordinates[index][1]);
+                }
               
                 return dungeon;
 
