@@ -118,6 +118,9 @@
                 let down_stair_pos = floor_coordinates [random_down_stair_index];
                 dungeon[down_stair_pos[0]][down_stair_pos[1]] = ">";
               
-                return dungeon;
+                return {
+                    dungeon: dungeon,
+                    up_stair_pos: up_stair_pos
+                }
 
             }
