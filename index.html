@@ -9,19 +9,37 @@
     <body>
         <pre id="dungeon"></pre>
         <script>
-            // starting dimensions
-            let map_height = 60;
-            let map_width = 100;
 
-            function generate_room() {
+            function generate_whole_map(){
+
+                // starting dimensions
+                let map_height = 60;
+                let map_width = 100;
+
+                // initialize map
+                let dungeon = [];
+                //outer loop
+                for (let h_index = 0; h_index < map_height; h_index++) {
+                    let row = [];
+                    //inner loop
+                    for (let w_index = 0; w_index < map_width; w_index++) {
+                        row.push("#");
+                    }
+                    dungeon.push(row);
+                }  
+
+                function generate_room() {
                 let minimum_room_height = 3;
                 let maximum_room_height = 9;
 
                 let minimum_room_width = 3;
                 let maximum_room_width = 15;
 
-                let room_height = Math.floor(Math.random() * (maximum_room_height - minimum_room_height + 1)) + minimum_room_height;
-                let room_width = Math.floor(Math.random() * (maximum_room_width - minimum_room_width + 1)) + minimum_room_width;
+                let random_height = Math.floor(Math.random() * 4);
+                let room_height = (random_height * 2) + 3;
+                
+                let random_width = Math.floor(Math.random() * 7);
+                let room_width = (random_width * 2) + 3;
 
                 let frame = 5; // map gen padding
                 let minimum_room_row = frame + Math.floor(room_height / 2);
@@ -43,6 +61,7 @@
                 let bottom_room_row = center_room_row + Math.floor(room_height / 2);
                 let left_room_column = center_room_column - Math.floor(room_width / 2);
                 let right_room_column = center_room_column + Math.floor(room_width / 2);
+
                 // Excavation
                 //outer loop
                 for (let row = top_room_row; row <= bottom_room_row; row++) {
@@ -51,31 +70,37 @@
                         dungeon[row][column] = ".";
                     }
                 }  
+                return [center_room_row, center_room_column];
+                }
+
+                // Construct map
+                let minimum_room_count = 15;
+                let maximum_room_count = 20;
+
+                let room_count = Math.floor(Math.random() * (maximum_room_count - minimum_room_count + 1)) + minimum_room_count;
+                // Call generate_room() repeatedly
+                // prime the pump
+                let compare_room_centers = [];
+                compare_room_centers.push(generate_room());
+                for (let index = 0; index < room_count - 1; index++) {
+                    compare_room_centers.push(generate_room());
+                }
+                // Connect rooms
+                function generate_corridor(previous_room_center, current_room_center) {
+
+                }
+                // Display
+                for (let row = 0; row < dungeon.length; row++) {
+                    //console.log(dungeon[row].join(""));
+                    document.getElementById("dungeon").textContent += dungeon[row].join("") + "\n";
+                }
+                console.log("Dungeon dimensions:", dungeon.length, dungeon[0].length);
+
             }
             
-            // initialize map
-            let dungeon = [];
-            //outer loop
-            for (let h_index = 0; h_index < map_height; h_index++) {
-                let row = [];
-                //inner loop
-                for (let w_index = 0; w_index < map_width; w_index++) {
-                    row.push("#");
-                }
-                dungeon.push(row);
-            }   
-            generate_room();
-            generate_room();
-            generate_room();
-            generate_room();
-            generate_room();
-   
-            // Display
-            for (let row = 0; row < dungeon.length; row++) {
-                //console.log(dungeon[row].join(""));
-                document.getElementById("dungeon").textContent += dungeon[row].join("") + "\n";
-            }
-            console.log("Dungeon dimensions:", dungeon.length, dungeon[0].length);
+            generate_whole_map();
+            
+            
         </script>
     </body>
 </html>
