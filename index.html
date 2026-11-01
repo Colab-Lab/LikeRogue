@@ -14,8 +14,14 @@
             let map_width = 100;
 
             function generate_room() {
-                let room_height = 5;
-                let room_width = 11;
+                let minimum_room_height = 3;
+                let maximum_room_height = 9;
+
+                let minimum_room_width = 3;
+                let maximum_room_width = 15;
+
+                let room_height = Math.floor(Math.random() * (maximum_room_height - minimum_room_height + 1)) + minimum_room_height;
+                let room_width = Math.floor(Math.random() * (maximum_room_width - minimum_room_width + 1)) + minimum_room_width;
 
                 let frame = 5; // map gen padding
                 let minimum_room_row = frame + Math.floor(room_height / 2);
@@ -47,8 +53,6 @@
                 }  
             }
             
-
-            
             // initialize map
             let dungeon = [];
             //outer loop
@@ -60,6 +64,7 @@
                 }
                 dungeon.push(row);
             }   
+            generate_room();
             generate_room();
             generate_room();
             generate_room();
