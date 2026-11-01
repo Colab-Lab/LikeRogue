@@ -100,9 +100,23 @@
                         }
                     }
                 }
+                //print the floor coordinates
                 for (let index = 0; index < floor_coordinates.length; index++) {
                     console.log(floor_coordinates[index][0], floor_coordinates[index][1]);
                 }
+
+                let random_up_stair_index = Math.floor(Math.random() * floor_coordinates.length);
+                let up_stair_pos = floor_coordinates[random_up_stair_index];
+                dungeon[up_stair_pos[0]][up_stair_pos[1]] = "<";
+
+                let random_down_stair_index = Math.floor(Math.random() * floor_coordinates.length);
+                
+                while (random_down_stair_index === random_up_stair_index) {
+                    random_down_stair_index = Math.floor(Math.random() * floor_coordinates.length);
+                }
+
+                let down_stair_pos = floor_coordinates [random_down_stair_index];
+                dungeon[down_stair_pos[0]][down_stair_pos[1]] = ">";
               
                 return dungeon;
 
