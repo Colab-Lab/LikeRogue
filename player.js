@@ -1,3 +1,5 @@
+import { check_collision } from "./collision.js";
+
 export function initialize_player(up_stair_pos) {
     let player_row = up_stair_pos[0];
     let player_column = up_stair_pos[1];
@@ -7,55 +9,123 @@ export function initialize_player(up_stair_pos) {
     };
 }
 
-export function handle_player_input(player, display_dungeon) {
+export function handle_player_input(player, dungeon, display_dungeon) {
     console.log("Input handler initialized");
     
     document.addEventListener("keydown", function(event) {
         switch (event.code) {
-            case "Numpad8":
+            case "Numpad8": {
                 // Move up
-                player.player_row--;
-                display_dungeon();
+                let proposed_row = player.player_row - 1;
+                let proposed_column = player.player_column;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
-            case "Numpad2":
+            }
+
+            case "Numpad2": {
                 // Move down
-                player.player_row++;
-                  display_dungeon();
+                let proposed_row = player.player_row + 1;
+                let proposed_column = player.player_column;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
-            case "Numpad4":
+            }
+
+            case "Numpad4": {
                 // Move left
-                player.player_column--;
-                display_dungeon();
+                let proposed_row = player.player_row;
+                let proposed_column = player.player_column - 1;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
-            case "Numpad6":
+            }
+
+            case "Numpad6": {
                 // Move right
-                player.player_column++;
-                display_dungeon();
+                let proposed_row = player.player_row;
+                let proposed_column = player.player_column + 1;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
-            case "Numpad7":
+            }
+
+            case "Numpad7": {
                 // Move up and left
-                player.player_row--;
-                player.player_column--;
-                display_dungeon();
+                let proposed_row = player.player_row - 1;
+                let proposed_column = player.player_column - 1;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
-            case "Numpad9":
+            }
+
+            case "Numpad9": {
                 // Move up and right
-                player.player_row--;
-                player.player_column++;
-                display_dungeon();
+                let proposed_row = player.player_row - 1;
+                let proposed_column = player.player_column + 1;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
-            case "Numpad1":
+            }
+
+            case "Numpad1": {
                 // Move down and left
-                player.player_row++;
-                player.player_column--;
-                display_dungeon();
+                let proposed_row = player.player_row + 1;
+                let proposed_column = player.player_column - 1;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
-            case "Numpad3":
+            }
+
+            case "Numpad3": {
                 // Move down and right
-                player.player_row++;
-                player.player_column++;
-                display_dungeon();
+                let proposed_row = player.player_row + 1;
+                let proposed_column = player.player_column + 1;
+                let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
+
+                if (valid_destination) {
+                    player.player_row = proposed_row;
+                    player.player_column = proposed_column;
+                    display_dungeon();
+                }
                 break;
+            }
+
             case "Numpad5":
                 // Wait
                 break;

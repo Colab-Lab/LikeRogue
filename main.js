@@ -5,7 +5,7 @@ import { initialize_player, handle_player_input } from "./player.js";
 let map_data = generate_whole_map();
 
 let player = initialize_player(map_data.up_stair_pos);
-handle_player_input(player, display_dungeon);
+handle_player_input(player, map_data.dungeon, display_dungeon);
 
 // Display
 function display_dungeon() {
