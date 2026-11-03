@@ -158,11 +158,64 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
     let direction_row = proposed_row - player.player_row;
     let direction_column = proposed_column - player.player_column;
 
+    let forward_tiles = find_forward_tiles(
+        player.player_row,
+        player.player_column,
+        direction_row,
+        direction_column
+    );
+
+    let traversible_forward_tiles = 0;
+
+    for (let i = 0; i < forward_tiles.length; i++) {
+        if (check_collision(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
+            traversible_forward_tiles++;
+        }
+    }
+
+    let initial_forward_count = traversible_forward_tiles;
+
     if (!move_player(player, dungeon, proposed_row, proposed_column, display_dungeon)) {
         return;
     }
 
     function continue_automove() {
+        let forward_tiles = find_forward_tiles(
+            player.player_row,
+            player.player_column,
+            direction_row,
+            direction_column
+        );
+
+        let traversible_forward_tiles = 0;
+
+        for (let i = 0; i < forward_tiles.length; i++) {
+            if (check_collision(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
+                traversible_forward_tiles++;
+            }
+        }
+
+        // Automove began in an open area.
+        if (initial_forward_count === 3) {
+            if (traversible_forward_tiles !== 3) {
+                return;
+            }
+
+            let next_row = player.player_row + direction_row;
+            let next_column = player.player_column + direction_column;
+
+            if (move_player(player, dungeon, next_row, next_column, display_dungeon)) {
+                setTimeout(continue_automove, 25);
+            }
+
+            return;
+        }
+
+        // Automove began in a corridor.
+        if (traversible_forward_tiles === 3) {
+            return;
+        }
+
         let possible_moves = find_orthogonal_moves(
             dungeon,
             player.player_row,
@@ -177,6 +230,13 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
 
         let next_row = possible_moves[0][0];
         let next_column = possible_moves[0][1];
+
+        if (traversible_forward_tiles > 0) {
+            if (next_row !== player.player_row + direction_row ||
+                next_column !== player.player_column + direction_column) {
+                return;
+            }
+        }
 
         direction_row = next_row - player.player_row;
         direction_column = next_column - player.player_column;
