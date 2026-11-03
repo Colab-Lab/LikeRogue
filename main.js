@@ -2,6 +2,10 @@ import { generate_whole_map } from "./dungeon_gen.js";
 
 import { initialize_player, handle_player_input } from "./player.js";
 
+import { check_adjacency, find_possible_moves } from "./collision.js";
+
+//import { find_possible_moves } from "./collision.js";
+
 let map_data = generate_whole_map();
 
 let player = initialize_player(map_data.up_stair_pos);
@@ -24,7 +28,21 @@ function display_dungeon() {
         }
 
         document.getElementById("dungeon").textContent += "\n";
-    }
+    }/*
+    console.log(
+        "Possible moves:",
+        JSON.stringify(find_possible_moves(
+            map_data.dungeon,
+            player.player_row,
+            player.player_column,
+            player.previous_row,
+            player.previous_column
+        ))
+    );
+    console.log(
+    "Adjacent traversible tiles:",
+    check_adjacency(map_data.dungeon, player.player_row, player.player_column)
+); */
 }
 
 display_dungeon();
