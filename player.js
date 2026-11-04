@@ -212,6 +212,34 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
 
             return;
         }
+
+        let forward_center_row = player.player_row + direction_row;
+        let forward_center_column = player.player_column + direction_column;
+
+        let forward_center_open = check_collision(
+            dungeon,
+            forward_center_row,
+            forward_center_column
+        );
+
+        let traversible_forward_diagonals = 0;
+
+        for (let i = 0; i < forward_tiles.length; i++) {
+            if (forward_tiles[i][0] === forward_center_row &&
+                forward_tiles[i][1] === forward_center_column) {
+                continue;
+            }
+
+            if (check_collision(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
+                traversible_forward_diagonals++;
+            }
+        }
+
+        // Stop if the forward center is blocked and both forward diagonals are open.
+        if (!forward_center_open && traversible_forward_diagonals === 2) {
+            return;
+        }
+
         console.log("Current forward count:", traversible_forward_tiles);
 
         console.log(
@@ -223,55 +251,36 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
             )
         );
 
-        // Stop when a corridor opens into a single-wall passage.
-        if (previous_forward_count === 1 &&
+            // Check the geometry when the forward count increases from one to two.
+        if (previous_forward_count !== 2 &&
             traversible_forward_tiles === 2 &&
-            check_collision(
+            forward_center_open) {
+
+            let second_forward_center_row = player.player_row + direction_row * 2;
+            let second_forward_center_column = player.player_column + direction_column * 2;
+
+            // Stop if the second forward-center tile is open.
+            if (check_collision(
                 dungeon,
-                player.player_row + direction_row,
-                player.player_column + direction_column
+                second_forward_center_row,
+                second_forward_center_column
             )) {
-
-            let forward_tile_positions = [];
-
-            for (let i = 0; i < forward_tiles.length; i++) {
-                if (check_collision(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
-                    forward_tile_positions.push(forward_tiles[i]);
-                }
-            }
-
-            // Check how many forward tiles remain open from the next position.
-            let opening_row = player.player_row + direction_row;
-            let opening_column = player.player_column + direction_column;
-
-            let next_forward_tiles = find_forward_tiles(
-                opening_row,
-                opening_column,
-                direction_row,
-                direction_column
-            );
-
-            let next_traversible_forward_tiles = 0;
-
-            for (let i = 0; i < next_forward_tiles.length; i++) {
-                if (check_collision(dungeon, next_forward_tiles[i][0], next_forward_tiles[i][1])) {
-                    next_traversible_forward_tiles++;
-                }
-            }
-            
-            // Enter the opening and stop if it continues to at least two forward tiles.
-            if (next_traversible_forward_tiles >= 2) {
-                move_player(player, dungeon, opening_row, opening_column, display_dungeon);
                 return;
             }
 
-            let forward_row_difference = forward_tile_positions[0][0] - forward_tile_positions[1][0];
-            let forward_column_difference = forward_tile_positions[0][1] - forward_tile_positions[1][1];
-
-            if (Math.abs(forward_row_difference) + Math.abs(forward_column_difference) === 2) {
-                return;
+            // Enter the corner and continue automoving.
+            if (move_player(
+                player,
+                dungeon,
+                forward_center_row,
+                forward_center_column,
+                display_dungeon
+            )) {
+                setTimeout(continue_automove, 25);
             }
-        }
+
+            return;
+        } 
 
         console.log("Previous forward count:", previous_forward_count);
 
