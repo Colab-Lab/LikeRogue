@@ -175,6 +175,8 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
 
     let initial_forward_count = traversible_forward_tiles;
 
+    let previous_forward_count = initial_forward_count;
+
     if (!move_player(player, dungeon, proposed_row, proposed_column, display_dungeon)) {
         return;
     }
@@ -211,8 +213,104 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
             return;
         }
 
-        // Automove began in a corridor.
+        let forward_center_row = player.player_row + direction_row;
+        let forward_center_column = player.player_column + direction_column;
+
+        let forward_center_open = check_collision(
+            dungeon,
+            forward_center_row,
+            forward_center_column
+        );
+
+        let traversible_forward_diagonals = 0;
+
+        for (let i = 0; i < forward_tiles.length; i++) {
+            if (forward_tiles[i][0] === forward_center_row &&
+                forward_tiles[i][1] === forward_center_column) {
+                continue;
+            }
+
+            if (check_collision(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
+                traversible_forward_diagonals++;
+            }
+        }
+
+        // Stop if the forward center is blocked and both forward diagonals are open.
+        if (!forward_center_open && traversible_forward_diagonals === 2) {
+            return;
+        }
+
+        console.log("Current forward count:", traversible_forward_tiles);
+
+        console.log(
+            "Tile directly ahead:",
+            check_collision(
+                dungeon,
+                player.player_row + direction_row,
+                player.player_column + direction_column
+            )
+        );
+
+            // Check the geometry when the forward count increases from one to two.
+        if (previous_forward_count !== 2 &&
+            traversible_forward_tiles === 2 &&
+            forward_center_open) {
+
+            let second_forward_center_row = player.player_row + direction_row * 2;
+            let second_forward_center_column = player.player_column + direction_column * 2;
+
+            // Stop if the second forward-center tile is open.
+            if (check_collision(
+                dungeon,
+                second_forward_center_row,
+                second_forward_center_column
+            )) {
+                return;
+            }
+
+            // Enter the corner and continue automoving.
+            if (move_player(
+                player,
+                dungeon,
+                forward_center_row,
+                forward_center_column,
+                display_dungeon
+            )) {
+                setTimeout(continue_automove, 25);
+            }
+
+            return;
+        } 
+
+        console.log("Previous forward count:", previous_forward_count);
+
+        // Stop if single-wall automovement loses either open forward tile.
+        if (previous_forward_count === 2 &&
+            traversible_forward_tiles < 2 &&
+            check_collision(
+                dungeon,
+                player.player_row + direction_row,
+                player.player_column + direction_column
+            )) {
+            return;
+        }
+
+        previous_forward_count = traversible_forward_tiles;
+
+        // Automove began in a corridor.   
         if (traversible_forward_tiles === 3) {
+            return;
+        }
+
+        let next_row = player.player_row + direction_row;
+        let next_column = player.player_column + direction_column;
+
+        // Continue straight if the tile ahead is traversible.
+        if (check_collision(dungeon, next_row, next_column)) {
+            if (move_player(player, dungeon, next_row, next_column, display_dungeon)) {
+                setTimeout(continue_automove, 25);
+            }
+
             return;
         }
 
@@ -224,12 +322,25 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
             player.previous_column
         );
 
+        // Check the two tiles flanking the position before the corner.
+        let flank_one_row = player.previous_row - direction_column;
+        let flank_one_column = player.previous_column + direction_row;
+
+        let flank_two_row = player.previous_row + direction_column;
+        let flank_two_column = player.previous_column - direction_row;
+
+        // Stop if either flanking tile is traversible.
+        if (check_collision(dungeon, flank_one_row, flank_one_column) ||
+            check_collision(dungeon, flank_two_row, flank_two_column)) {
+            return;
+        }
+
         if (possible_moves.length !== 1) {
             return;
         }
 
-        let next_row = possible_moves[0][0];
-        let next_column = possible_moves[0][1];
+        next_row = possible_moves[0][0];
+        next_column = possible_moves[0][1];
 
         if (traversible_forward_tiles > 0) {
             if (next_row !== player.player_row + direction_row ||
