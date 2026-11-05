@@ -1,126 +1,269 @@
- export function generate_whole_map(){
+export function generate_whole_map(){
 
-                // starting dimensions
-                let map_height = 60;
-                let map_width = 100;
+    // starting dimensions
+    let map_height = 60;
+    let map_width = 100;
 
-                // initialize map
-                let dungeon = [];
-                //outer loop
-                for (let h_index = 0; h_index < map_height; h_index++) {
-                    let row = [];
-                    //inner loop
-                    for (let w_index = 0; w_index < map_width; w_index++) {
-                        row.push("#");
-                    }
-                    dungeon.push(row);
-                }  
+    // initialize map
+    let dungeon = [];
 
-                function generate_room() {
-                    let minimum_room_height = 3;
-                    let maximum_room_height = 9;
+    //outer loop
+    for (let h_index = 0; h_index < map_height; h_index++) {
+        let row = [];
 
-                    let minimum_room_width = 3;
-                    let maximum_room_width = 15;
+        //inner loop
+        for (let w_index = 0; w_index < map_width; w_index++) {
+            row.push("#");
+        }
 
-                    let random_height = Math.floor(Math.random() * 4);
-                    let room_height = (random_height * 2) + 3;
-                    
-                    let random_width = Math.floor(Math.random() * 7);
-                    let room_width = (random_width * 2) + 3;
+        dungeon.push(row);
+    }
 
-                    let frame = 5; // map gen padding
-                    let minimum_room_row = frame + Math.floor(room_height / 2);
-                    let maximum_room_row = map_height - 1 - frame - Math.floor(room_height / 2);
+    function generate_room() {
+        let minimum_room_height = 3;
+        let maximum_room_height = 9;
 
-                    let minimum_room_column = frame + Math.floor(room_width / 2);
-                    let maximum_room_column = map_width - 1 - frame - Math.floor(room_width / 2);
-                    
-                    let range_y = maximum_room_row - minimum_room_row + 1;
-                    let range_x = maximum_room_column - minimum_room_column + 1;
+        let minimum_room_width = 3;
+        let maximum_room_width = 15;
 
-                    let center_room_row = Math.floor(Math.random() * range_y) + minimum_room_row;
-                    let center_room_column = Math.floor(Math.random() * range_x) + minimum_room_column;
+        let random_height = Math.floor(Math.random() * 4);
+        let room_height = (random_height * 2) + 3;
 
-                    console.log("Center room row:", center_room_row);
-                    console.log("Center room column:", center_room_column);
+        let random_width = Math.floor(Math.random() * 7);
+        let room_width = (random_width * 2) + 3;
 
-                    let top_room_row = center_room_row - Math.floor(room_height / 2);
-                    let bottom_room_row = center_room_row + Math.floor(room_height / 2);
-                    let left_room_column = center_room_column - Math.floor(room_width / 2);
-                    let right_room_column = center_room_column + Math.floor(room_width / 2);
+        let frame = 5; // map gen padding
+        let minimum_room_row = frame + Math.floor(room_height / 2);
+        let maximum_room_row = map_height - 1 - frame - Math.floor(room_height / 2);
 
-                    // Excavation
-                    //outer loop
-                    for (let row = top_room_row; row <= bottom_room_row; row++) {
-                        //inner loop
-                        for (let column = left_room_column; column <= right_room_column; column++) {
-                            dungeon[row][column] = ".";
-                        }
-                    }  
-                    return [center_room_row, center_room_column];
-                }
-                
-                function generate_corridor(previous_room_center, current_room_center) {
-                    let lesser_column = Math.min(previous_room_center[1], current_room_center[1]);
-                    let greater_column = Math.max(previous_room_center[1], current_room_center[1]);
-                    
-                    for (let column = lesser_column; column <= greater_column; column++) {
-                        dungeon[previous_room_center[0]][column] = ".";
-                    }
-                    
-                    let lesser_row = Math.min(previous_room_center[0], current_room_center[0]);
-                    let greater_row = Math.max(previous_room_center[0], current_room_center[0]);
+        let minimum_room_column = frame + Math.floor(room_width / 2);
+        let maximum_room_column = map_width - 1 - frame - Math.floor(room_width / 2);
 
-                    for (let row = lesser_row; row <= greater_row; row++) {
-                        dungeon[row][current_room_center[1]] = ".";
-                    }
-                }
-                // Construct map
-                let minimum_room_count = 15;
-                let maximum_room_count = 20;
+        let range_y = maximum_room_row - minimum_room_row + 1;
+        let range_x = maximum_room_column - minimum_room_column + 1;
 
-                let room_count = Math.floor(Math.random() * (maximum_room_count - minimum_room_count + 1)) + minimum_room_count;
-                // Call generate_room() repeatedly
-                // prime the pump
-                let compare_room_centers = [];
-                compare_room_centers.push(generate_room());
-                for (let index = 1; index < room_count; index++) {
-                    compare_room_centers.push(generate_room());
-                    generate_corridor(compare_room_centers[index - 1],
-                    compare_room_centers[index]);
-                }
-                
-                let floor_coordinates = []
+        let center_room_row = Math.floor(Math.random() * range_y) + minimum_room_row;
+        let center_room_column = Math.floor(Math.random() * range_x) + minimum_room_column;
 
-                for (let row = 0; row < dungeon.length; row++) {
-                    for (let column = 0; column < dungeon[row].length; column++) {
-                        if (dungeon[row][column] === ".") {
-                            floor_coordinates.push([row, column]);
-                        }
-                    }
-                }
-                //print the floor coordinates
-                for (let index = 0; index < floor_coordinates.length; index++) {
-                    console.log(floor_coordinates[index][0], floor_coordinates[index][1]);
-                }
+        console.log("Center room row:", center_room_row);
+        console.log("Center room column:", center_room_column);
 
-                let random_up_stair_index = Math.floor(Math.random() * floor_coordinates.length);
-                let up_stair_pos = floor_coordinates[random_up_stair_index];
-                dungeon[up_stair_pos[0]][up_stair_pos[1]] = "<";
+        let top_room_row = center_room_row - Math.floor(room_height / 2);
+        let bottom_room_row = center_room_row + Math.floor(room_height / 2);
+        let left_room_column = center_room_column - Math.floor(room_width / 2);
+        let right_room_column = center_room_column + Math.floor(room_width / 2);
 
-                let random_down_stair_index = Math.floor(Math.random() * floor_coordinates.length);
-                
-                while (random_down_stair_index === random_up_stair_index) {
-                    random_down_stair_index = Math.floor(Math.random() * floor_coordinates.length);
-                }
+        // Excavation
+        //outer loop
+        for (let row = top_room_row; row <= bottom_room_row; row++) {
 
-                let down_stair_pos = floor_coordinates [random_down_stair_index];
-                dungeon[down_stair_pos[0]][down_stair_pos[1]] = ">";
-              
-                return {
-                    dungeon: dungeon,
-                    up_stair_pos: up_stair_pos
-                }
-
+            //inner loop
+            for (let column = left_room_column; column <= right_room_column; column++) {
+                dungeon[row][column] = ".";
             }
+        }
+
+        return [center_room_row, center_room_column];
+    }
+
+    function generate_corridor(previous_room_center, current_room_center) {
+        let lesser_column = Math.min(previous_room_center[1], current_room_center[1]);
+        let greater_column = Math.max(previous_room_center[1], current_room_center[1]);
+
+        for (let column = lesser_column; column <= greater_column; column++) {
+            dungeon[previous_room_center[0]][column] = ".";
+        }
+
+        let lesser_row = Math.min(previous_room_center[0], current_room_center[0]);
+        let greater_row = Math.max(previous_room_center[0], current_room_center[0]);
+
+        for (let row = lesser_row; row <= greater_row; row++) {
+            dungeon[row][current_room_center[1]] = ".";
+        }
+    }
+
+    // Construct map
+    let minimum_room_count = 15;
+    let maximum_room_count = 20;
+
+    let room_count = Math.floor(Math.random() * (maximum_room_count - minimum_room_count + 1)) + minimum_room_count;
+
+    // Call generate_room() repeatedly
+    // prime the pump
+    let compare_room_centers = [];
+    compare_room_centers.push(generate_room());
+
+    for (let index = 1; index < room_count; index++) {
+        compare_room_centers.push(generate_room());
+        generate_corridor(compare_room_centers[index - 1],
+        compare_room_centers[index]);
+    }
+
+    let floor_coordinates = [];
+
+    for (let row = 0; row < dungeon.length; row++) {
+        for (let column = 0; column < dungeon[row].length; column++) {
+            if (dungeon[row][column] === ".") {
+                floor_coordinates.push([row, column]);
+            }
+        }
+    }
+
+    //print the floor coordinates
+    for (let index = 0; index < floor_coordinates.length; index++) {
+        console.log(floor_coordinates[index][0], floor_coordinates[index][1]);
+    }
+
+    let random_up_stair_index = Math.floor(Math.random() * floor_coordinates.length);
+    let up_stair_pos = floor_coordinates[random_up_stair_index];
+    dungeon[up_stair_pos[0]][up_stair_pos[1]] = "<";
+
+    let random_down_stair_index = Math.floor(Math.random() * floor_coordinates.length);
+
+    while (random_down_stair_index === random_up_stair_index) {
+        random_down_stair_index = Math.floor(Math.random() * floor_coordinates.length);
+    }
+
+    let down_stair_pos = floor_coordinates[random_down_stair_index];
+    dungeon[down_stair_pos[0]][down_stair_pos[1]] = ">";
+
+    let door_candidates = [];
+
+    // establish directions for tile orientation calculations
+    let directions = [
+        [-1, 0], // north
+        [0, 1],  // east
+        [1, 0],  // south
+        [0, -1]  // west
+    ];
+
+    for (let row = 0; row < dungeon.length; row++) {
+        for (let column = 0; column < dungeon[row].length; column++) {
+
+            if (dungeon[row][column] === ".") {
+
+                for (let direction of directions) {
+                    let perpendicular = [-direction[1], direction[0]];
+
+                    let diagonal_one_offset = [
+                        direction[0] + perpendicular[0],
+                        direction[1] + perpendicular[1]
+                    ];
+
+                    let diagonal_two_offset = [
+                        direction[0] - perpendicular[0],
+                        direction[1] - perpendicular[1]
+                    ];
+
+                    let opposite_direction = [
+                        -direction[0],
+                        -direction[1]
+                    ];
+
+                    let opposite_perpendicular = [
+                        -perpendicular[0],
+                        -perpendicular[1]
+                    ];
+
+                    let opposite_diagonal_one_offset = [
+                        opposite_direction[0] + perpendicular[0],
+                        opposite_direction[1] + perpendicular[1]
+                    ];
+
+                    let opposite_diagonal_two_offset = [
+                        opposite_direction[0] + opposite_perpendicular[0],
+                        opposite_direction[1] + opposite_perpendicular[1]
+                    ];
+
+                    let forward_tile = dungeon[
+                        row + direction[0]
+                    ][
+                        column + direction[1]
+                    ];
+
+                    let second_forward_tile = dungeon[
+                        row + direction[0] * 2
+                    ][
+                        column + direction[1] * 2
+                    ];
+
+                    let diagonal_one_tile = dungeon[
+                        row + diagonal_one_offset[0]
+                    ][
+                        column + diagonal_one_offset[1]
+                    ];
+
+                    let diagonal_two_tile = dungeon[
+                        row + diagonal_two_offset[0]
+                    ][
+                        column + diagonal_two_offset[1]
+                    ];
+
+                    let opposite_tile = dungeon[
+                        row + opposite_direction[0]
+                    ][
+                        column + opposite_direction[1]
+                    ];
+
+                    let perpendicular_tile = dungeon[
+                        row + perpendicular[0]
+                    ][
+                        column + perpendicular[1]
+                    ];
+
+                    let opposite_perpendicular_tile = dungeon[
+                        row + opposite_perpendicular[0]
+                    ][
+                        column + opposite_perpendicular[1]
+                    ];
+
+                    let opposite_diagonal_one_tile = dungeon[
+                        row + opposite_diagonal_one_offset[0]
+                    ][
+                        column + opposite_diagonal_one_offset[1]
+                    ];
+
+                    let opposite_diagonal_two_tile = dungeon[
+                        row + opposite_diagonal_two_offset[0]
+                    ][
+                        column + opposite_diagonal_two_offset[1]
+                    ];
+
+                    if (
+                        opposite_tile === "." &&
+                        perpendicular_tile === "#" &&
+                        opposite_perpendicular_tile === "#" &&
+                        opposite_diagonal_one_tile === "#" &&
+                        opposite_diagonal_two_tile === "#" &&
+                        (
+                            (
+                                forward_tile === "." &&
+                                diagonal_one_tile === "." &&
+                                diagonal_two_tile === "."
+                            ) ||
+                            (
+                                forward_tile === "." &&
+                                (diagonal_one_tile === "." || diagonal_two_tile === ".") &&
+                                !(diagonal_one_tile === "." && diagonal_two_tile === ".") &&
+                                second_forward_tile === "."
+                            )
+                        )
+                    ) {
+                        door_candidates.push([row, column]);
+                    }
+
+                }
+            }
+        }
+    }
+
+    for (let candidate of door_candidates) {
+        dungeon[candidate[0]][candidate[1]] = "+";
+    }
+
+    return {
+        dungeon: dungeon,
+        up_stair_pos: up_stair_pos
+    };
+
+}
