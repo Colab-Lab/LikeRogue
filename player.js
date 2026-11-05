@@ -2,6 +2,8 @@
 
 import { check_collision, check_automove_geometry, find_orthogonal_moves, find_forward_tiles } from "./collision.js";
 
+let shift_held = false;
+
 export function initialize_player(up_stair_pos) {
     let player_row = up_stair_pos[0];
     let player_column = up_stair_pos[1];
@@ -15,6 +17,18 @@ export function initialize_player(up_stair_pos) {
 
 export function handle_player_input(player, dungeon, display_dungeon) {
     console.log("Input handler initialized");
+    
+    document.addEventListener("keydown", function(event) {
+        if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
+            shift_held = true;
+        }
+    });
+
+    document.addEventListener("keyup", function(event) {
+        if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
+            shift_held = false;
+        }
+    });
     
     document.addEventListener("keydown", function(event) {
         if (event.repeat) {
@@ -244,6 +258,11 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
     }
 
     function continue_automove() {
+
+        if (!shift_held) {
+            return;
+        }
+        
         let forward_tiles = find_forward_tiles(
             player.player_row,
             player.player_column,
