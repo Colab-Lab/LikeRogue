@@ -65,7 +65,7 @@
                     let lesser_column = Math.min(previous_room_center[1], current_room_center[1]);
                     let greater_column = Math.max(previous_room_center[1], current_room_center[1]);
                     
-                    for (let column = lesser_column; column <= greater_column;column++) {
+                    for (let column = lesser_column; column <= greater_column; column++) {
                         dungeon[previous_room_center[0]][column] = ".";
                     }
                     
