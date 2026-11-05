@@ -10,3 +10,7 @@ body {
 .wall {
     color: #808080;
 }
+
+.door {
+    color: rgb(185, 154, 114)
+}

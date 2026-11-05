@@ -29,7 +29,11 @@ function display_dungeon() {
                 } else {
                     dungeon_display += " ";
                 }
-            } else {
+                } else if (map_data.dungeon[row][column] === "+" ||
+                    map_data.dungeon[row][column] === ",") {
+                        dungeon_display += '<span class="door">' +
+                        map_data.dungeon[row][column] + '</span>';
+                } else {
                 // Handle non-wall tile
                 dungeon_display += map_data.dungeon[row][column];
             }

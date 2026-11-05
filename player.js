@@ -1,4 +1,6 @@
-import { check_collision, find_orthogonal_moves, find_forward_tiles } from "./collision.js";
+// player.js
+
+import { check_collision, check_automove_geometry, find_orthogonal_moves, find_forward_tiles } from "./collision.js";
 
 export function initialize_player(up_stair_pos) {
     let player_row = up_stair_pos[0];
@@ -23,7 +25,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_row = player.player_row - 1;
                 let proposed_column = player.player_column;
                 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -37,7 +45,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_column = player.player_column;
                 let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -51,7 +65,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_column = player.player_column - 1;
                 let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -65,7 +85,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_column = player.player_column + 1;
                 let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -79,7 +105,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_column = player.player_column - 1;
                 let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -93,7 +125,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_column = player.player_column + 1;
                 let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -107,7 +145,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_column = player.player_column - 1;
                 let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -121,7 +165,13 @@ export function handle_player_input(player, dungeon, display_dungeon) {
                 let proposed_column = player.player_column + 1;
                 let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
-                if (event.shiftKey) {
+                if (event.shiftKey &&
+                    dungeon[proposed_row][proposed_column] === ",") {
+
+                    dungeon[proposed_row][proposed_column] = "+";
+                    display_dungeon();
+
+                } else if (event.shiftKey) {
                     automove(player, dungeon, proposed_row, proposed_column, display_dungeon);
                 } else {
                     move_player(player, dungeon, proposed_row, proposed_column, display_dungeon);
@@ -139,6 +189,18 @@ export function handle_player_input(player, dungeon, display_dungeon) {
 }
 
 function move_player(player, dungeon, proposed_row, proposed_column, display_dungeon) {
+    
+    if (proposed_row >= 0 &&
+        proposed_row < dungeon.length &&
+        proposed_column >= 0 &&
+        proposed_column < dungeon[proposed_row].length &&
+        dungeon[proposed_row][proposed_column] === "+") {
+
+        dungeon[proposed_row][proposed_column] = ",";
+        display_dungeon();
+        return false;
+    }
+    
     let valid_destination = check_collision(dungeon, proposed_row, proposed_column);
 
     if (valid_destination) {
@@ -168,7 +230,7 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
     let traversible_forward_tiles = 0;
 
     for (let i = 0; i < forward_tiles.length; i++) {
-        if (check_collision(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
+        if (check_automove_geometry(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
             traversible_forward_tiles++;
         }
     }
@@ -192,7 +254,7 @@ function automove(player, dungeon, proposed_row, proposed_column, display_dungeo
         let traversible_forward_tiles = 0;
 
         for (let i = 0; i < forward_tiles.length; i++) {
-            if (check_collision(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
+            if (check_automove_geometry(dungeon, forward_tiles[i][0], forward_tiles[i][1])) {
                 traversible_forward_tiles++;
             }
         }
